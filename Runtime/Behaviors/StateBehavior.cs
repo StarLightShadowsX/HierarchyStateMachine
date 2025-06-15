@@ -20,7 +20,7 @@ namespace SLS.StateMachineH {
         /// <summary>
         /// The current State. Usefull for referencing this SubObject.
         /// </summary>
-        [field: SerializeField] public State State { get; internal set; }
+        [field: SerializeField, HideInInspector] public State State { get; internal set; }
         /// <summary>
         /// An indirection to access the State Machine's gameObject property.
         /// </summary>
@@ -45,14 +45,19 @@ namespace SLS.StateMachineH {
             if (makeDirty) EditorUtility.SetDirty(this);
 #endif
         }
-        protected virtual void OnSetup() { }
+        internal virtual void OnSetup() { }
 
+        internal void Reset()
+        {
+            if(State == null) State = GetComponent<State>();
+            if (State != null) Machine = State.Machine;
+        }
 
-        public virtual void OnAwake() { }
-        public virtual void OnUpdate() { }
-        public virtual void OnFixedUpdate() { }
-        public virtual void OnEnter(State prev, bool isFinal) { }
-        public virtual void OnExit(State next) { }
+        internal virtual void OnAwake() { }
+        internal virtual void OnUpdate() { }
+        internal virtual void OnFixedUpdate() { }
+        internal virtual void OnEnter(State prev, bool isFinal) { }
+        internal virtual void OnExit(State next) { }
 
         public C GetComponentFromMachine<C>() where C : Component => Machine.GetComponent<C>();
         public bool TryGetComponentFromMachine<C>(out C result) where C : Component => Machine.TryGetComponent(out result);

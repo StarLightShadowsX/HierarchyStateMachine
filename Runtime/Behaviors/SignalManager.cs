@@ -64,7 +64,7 @@ namespace SLS.StateMachineH
         public float ActiveSignalLength { get; private set; } = 0f;
         public float SignalQueueTimer { get; private set; } = 0f;
 
-        public override void OnUpdate()
+        internal override void OnUpdate()
         {
             if(queueSignals && ActiveSignalLength > 0f)
             {

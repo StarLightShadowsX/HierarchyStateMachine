@@ -72,7 +72,7 @@ namespace SLS.StateMachineH {
             for (int i = 0; i < Behaviors.Length; i++)
                 Behaviors[i].OnFixedUpdate();
 
-            CurrentChild?.DoFixedUpdate();
+            if(CurrentChild) CurrentChild.DoFixedUpdate();
         }
         internal void DoEnter(State prev)
         {

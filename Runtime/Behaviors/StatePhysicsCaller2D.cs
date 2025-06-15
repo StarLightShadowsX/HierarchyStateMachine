@@ -8,7 +8,7 @@ namespace SLS.StateMachineH
         private IStateBehaviorPhysicsCollision2D[] collisions2D;
         private IStateBehaviorPhysicsTrigger2D[] triggers2D;
 
-        protected override void OnSetup()
+        internal override void OnAwake()
         {
             collisions2D = Machine.StateHolder.GetComponentsInChildren<IStateBehaviorPhysicsCollision2D>();
             triggers2D = Machine.StateHolder.GetComponentsInChildren<IStateBehaviorPhysicsTrigger2D>();

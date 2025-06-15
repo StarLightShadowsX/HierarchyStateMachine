@@ -32,7 +32,7 @@ namespace SLS.StateMachineH
         public void Unlock() => Locked = false;
         public void Lock() => Locked = true;
 
-        public override void OnEnter(State prev, bool isFinal)
+        internal override void OnEnter(State prev, bool isFinal)
         {
             if (lockOnEnter) Locked = true;
         }

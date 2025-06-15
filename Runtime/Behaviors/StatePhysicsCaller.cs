@@ -8,7 +8,7 @@ namespace SLS.StateMachineH
         private IStateBehaviorPhysicsCollision[] collisions;
         private IStateBehaviorPhysicsTrigger[] triggers;
 
-        protected override void OnSetup()
+        internal override void OnAwake()
         {
             collisions = Machine.StateHolder.GetComponentsInChildren<IStateBehaviorPhysicsCollision>();
             triggers = Machine.StateHolder.GetComponentsInChildren<IStateBehaviorPhysicsTrigger>();

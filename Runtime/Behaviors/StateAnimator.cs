@@ -14,13 +14,13 @@ namespace SLS.StateMachineH
 
         [HideInInspector] public Animator animator;
 
-        protected override void OnSetup()
+        internal override void OnSetup()
         {
             TryGetComponentFromMachine(out animator);
             if(animator == null) Destroy(this);
         }
 
-        public override void OnEnter(State prev, bool isFinal)
+        internal override void OnEnter(State prev, bool isFinal)
         {
             if (!isFinal && !doWhenNotFinal) return;
             if (onEntry == EntryAnimAction.Play) Play(onEnterName);
