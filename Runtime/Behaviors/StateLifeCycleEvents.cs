@@ -18,18 +18,18 @@ namespace SLS.StateMachineH
         public EVENT onExit = new();
         public GameObject[] activateObjects;
 
-        protected override void OnSetup() => onSetup?.InvokeSafe();
-        public override void OnAwake() => onAwake?.InvokeSafe();
+        protected override void OnSetup() => onSetup?.Invoke();
+        public override void OnAwake() => onAwake?.Invoke();
         public override void OnEnter(State prev, bool isFinal)
         {
-            onEnter?.InvokeSafe();
+            onEnter?.Invoke();
             if (activateObjects != null)
                 for (int i = 0; i < activateObjects.Length; i++)
                     activateObjects[i].SetActive(true);
         }
         public override void OnExit(State next)
         {
-            onExit?.InvokeSafe();
+            onExit?.Invoke();
             if (activateObjects != null)
                 for (int i = 0; i < activateObjects.Length; i++)
                     activateObjects[i].SetActive(false);
