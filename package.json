@@ -1,9 +1,8 @@
 {
     "name": "com.starlightshadows.hierarchystatemachine",
-    "version": "0.0.1", 
+    "version": "1.0.0", 
     "displayName": "Hierarchical State Machine", 
     "description": "A State Machine system based on sub-objects.", 
-    "unity": "2022.3.37f1", 
     "author": 
     {
         "name": "Carl Bowne", 
