@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -165,11 +166,21 @@ namespace SLS.StateMachineH
             GUI.color = new(.341f, .706f, 1.141f);
             if (GUI.Button(addChildButtonRect, "+"))
             {
-                target.AddChildNode();
+                State newNode = target.AddChildNode();
+                RenameAfterCreate(newNode.gameObject);
             }
             GUI.color = Color.white;
             position.y += position.yMax;
         }
+
+        async static void RenameAfterCreate(GameObject select)
+        {
+            Selection.activeObject = select;
+            await Task.Delay(20);
+            EditorApplication.ExecuteMenuItem("Window/General/Hierarchy");
+            EditorApplication.ExecuteMenuItem("Edit/Rename");
+        }
+
 
         public static void DrawActiveStateMachineDetails(ref Rect position, State target)
         {

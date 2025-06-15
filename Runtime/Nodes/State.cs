@@ -97,7 +97,7 @@ namespace SLS.StateMachineH {
         [ContextMenu("Enter")]
         public void Enter() => Machine.TransitionState(this);
 
-        public void AddChildNode()
+        public State AddChildNode()
         {
             GameObject newObject = new("New State");
             newObject.transform.SetParent(this is StateMachine SM ? SM.StateHolder : transform, false);
@@ -112,9 +112,8 @@ namespace SLS.StateMachineH {
             EditorUtility.SetDirty(Machine);
             EditorUtility.SetDirty(this);
             EditorUtility.SetDirty(newNode);
-            EditorGUIUtility.PingObject(newNode as State);
-            Selection.activeObject = newNode as Object;
 #endif
+            return newNode;
         }
     }
 
