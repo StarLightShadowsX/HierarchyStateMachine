@@ -2,79 +2,126 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
-namespace SLS.StateMachineH.V5 { 
-    public class State : MonoBehaviour, IStateChild
+namespace SLS.StateMachineH { 
+    public class State : MonoBehaviour
     {
+        [field: SerializeField] public StateBehavior[] Behaviors { get; internal set; }
+        [field: SerializeField] public StateMachine Machine { get; internal set; }
+        [field: SerializeField] public State Parent { get; internal set; }
+        [field: SerializeField] public int Layer { get; internal set; }
+        [field: SerializeField, SerializeReference] public List<State> Children { get; internal set; } = new();
+        [field: SerializeField] public int ChildCount { get; internal set; }
 
-        public StateBehavior[] Behaviors => behaviors;
-        [SerializeField] protected StateBehavior[] behaviors;
-        public StateMachine Machine => machine;
-        [SerializeField] protected StateMachine machine;
-        public IStateGroup Parent => parent;
-        [SerializeField] protected IStateGroup parent;
-        public int Layer => layer;
-        [SerializeField] protected int layer;
-        public bool Active => active;
-        protected bool active;
+        public virtual bool Active { get; internal set; }
+        public State CurrentChild { get; internal set; }
 
-
-
-
-
-
+        public virtual StateType Type => ChildCount > 0
+            ? StateType.Group
+            : StateType.End;
+        public virtual bool HasChildren => ChildCount > 0;
+        public new string name => gameObject.name;
 
 
-
-
-        public void Setup(StateMachine machine, IStateGroup parent, int layer, bool makeDirty = false)
+        public virtual void Setup(StateMachine machine, State parent, int layer, bool makeDirty = false)
         {
-            this.machine = machine;
-            this.parent = parent;
-            this.layer = layer;
-            active = false;
+            this.Machine = machine;
+            this.Parent = parent;
+            this.Layer = layer;
+            Active = false;
             gameObject.SetActive(false);
-            behaviors = GetComponents<StateBehavior>();
-            for (int i = 0; i < behaviors.Length; i++)
-                behaviors[i].Setup(this, makeDirty);
+            Behaviors = GetComponents<StateBehavior>();
+            for (int i = 0; i < Behaviors.Length; i++)
+                Behaviors[i].Setup(this, makeDirty);
+
+            {
+                ChildCount = transform.childCount;
+                Children = new();
+                for (int i = 0; i < ChildCount; i++)
+                {
+                    Children.Add(transform.GetChild(i).GetComponent<State>());
+                    Children[i].Setup(machine, this, layer + 1);
+                }
+            }//Children Setup
 
 #if UNITY_EDITOR
             if (makeDirty) EditorUtility.SetDirty(this);
 #endif
         }
 
-        public void DoAwake()
+        internal void DoAwake()
         {
-            for (int i = 0; i < behaviors.Length; i++)
-                behaviors[i].OnAwake();
+            for (int i = 0; i < Behaviors.Length; i++)
+                Behaviors[i].OnAwake();
+
+            for (int i = 0; i < Children.Count; i++)
+                Children[i].DoAwake();
         }
-        public void DoUpdate()
+
+        internal void DoUpdate()
         {
-            for (int i = 0; i < behaviors.Length; i++)
-                behaviors[i].OnUpdate();
+            for (int i = 0; i < Behaviors.Length; i++)
+                Behaviors[i].OnUpdate();
+
+            CurrentChild?.DoUpdate();
         }
-        public void DoFixedUpdate()
+
+        internal void DoFixedUpdate()
         {
-            for (int i = 0; i < behaviors.Length; i++)
-                behaviors[i].OnFixedUpdate();
+            for (int i = 0; i < Behaviors.Length; i++)
+                Behaviors[i].OnFixedUpdate();
+
+            CurrentChild?.DoFixedUpdate();
         }
-        public void DoEnter(State prev)
+        internal void DoEnter(State prev)
         {
-            for (int i = 0; i < behaviors.Length; i++)
-                behaviors[i].OnEnter(null, false);
-            active = true;
+            for (int i = 0; i < Behaviors.Length; i++)
+                Behaviors[i].OnEnter(null, false);
+            Active = true;
             gameObject.SetActive(true);
-            for (int i = 0; i < behaviors.Length; i++) 
-                behaviors[i].OnEnter(prev, true);
+            for (int i = 0; i < Behaviors.Length; i++)
+                Behaviors[i].OnEnter(prev, false);
         }
-        public void DoExit(State next)
+        internal void DoExit(State next)
         {
-            for (int i = 0; i < behaviors.Length; i++)
-                behaviors[i].OnExit(null);
-            active = false;
+            for (int i = 0; i < Behaviors.Length; i++)
+                Behaviors[i].OnExit(null);
+            Active = false;
             gameObject.SetActive(false);
-            for (int i = 0; i < behaviors.Length; i++)
-                behaviors[i].OnExit(next);
+            CurrentChild = null;
+            for (int i = 0; i < Behaviors.Length; i++)
+                Behaviors[i].OnExit(next);
         }
+
+        [ContextMenu("Enter")]
+        public void Enter() => Machine.TransitionState(this);
+
+        public void AddChildNode()
+        {
+            GameObject newObject = new("New State");
+            newObject.transform.SetParent(this is StateMachine SM ? SM.StateHolder : transform, false);
+            State newNode = newObject.AddComponent<State>();
+            Children.Add(newNode);
+            ChildCount++;
+            newNode.Setup(Machine, this, Layer + 1, true);
+
+#if UNITY_EDITOR
+            Undo.RegisterCreatedObjectUndo(newObject, "Add Child Node");
+            Undo.RecordObject(this, "Add Child Node");
+            EditorUtility.SetDirty(Machine);
+            EditorUtility.SetDirty(this);
+            EditorUtility.SetDirty(newNode);
+            EditorGUIUtility.PingObject(newNode as State);
+            Selection.activeObject = newNode as Object;
+#endif
+        }
+    }
+
+    public enum StateType
+    {
+        End,
+        Group,
+        Machine
     }
 }
