@@ -12,7 +12,7 @@ namespace SLS.StateMachineH.Samples
         public SampleGroundedMovement groundedState;
 
         [SerializeField, HideInInspector] private MachineRigidBody body;
-        internal override void OnSetup()
+        protected override void OnSetup()
         {
             if (body == null) body = GetComponentFromMachine<MachineRigidBody>();
         }

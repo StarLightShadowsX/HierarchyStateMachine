@@ -53,47 +53,53 @@ namespace SLS.StateMachineH
         }
 
         /// <summary>  
-        /// Called during the setup process. Override to add custom setup logic.  
+        /// Called during the <see cref="StateMachine"/>'s setup process. Override to add custom setup logic. 
         /// </summary>  
-        internal virtual void OnSetup() { }
+        protected virtual void OnSetup() { }
 
         /// <summary>  
-        /// Resets the <see cref="StateBehavior"/> to its default state.  
-        /// Ensures the <see cref="State"/> and <see cref="StateMachine"/> references are properly initialized.  
+        /// Happens when the <see cref="StateBehavior"/> is created/reset in the editor. Override to add custom reset logic. (Remember to call base.Reset())
+        /// <br /> Resets the <see cref="StateBehavior"/> to its default state.  
+        /// <br /> Ensures the <see cref="State"/> and <see cref="StateMachine"/> references are properly initialized.  
         /// </summary>  
-        internal void Reset()
+        protected void Reset()
         {
             if (State == null) State = GetComponent<State>();
             if (State != null) Machine = State.Machine;
         }
 
         /// <summary>  
-        /// Called during the Awake phase. Override to add custom logic.  
+        /// Called during the Awake phase of the <see cref="StateMachine"/>. Override to add custom logic.
         /// </summary>  
-        internal virtual void OnAwake() { }
+        protected virtual void OnAwake() { }
+        internal void DoAwake() => OnAwake();
 
         /// <summary>  
-        /// Called during the Update phase. Override to add custom logic.  
+        /// Called when this <see cref="StateBehavior"/>'s <see cref="State"/> is active during the <see cref="StateMachine"/>'s Update phase. Override to add custom logic. 
         /// </summary>  
-        internal virtual void OnUpdate() { }
+        protected virtual void OnUpdate() { }
+        internal void DoUpdate() => OnUpdate();
 
         /// <summary>  
-        /// Called during the FixedUpdate phase. Override to add custom logic.  
+        /// Called when this <see cref="StateBehavior"/>'s <see cref="State"/> is active during the <see cref="StateMachine"/>'s FixedUpdate. Override to add custom logic.  
         /// </summary>  
-        internal virtual void OnFixedUpdate() { }
+        protected virtual void OnFixedUpdate() { }
+        internal void DoFixedUpdate() => OnFixedUpdate();
 
         /// <summary>  
-        /// Called when entering the <see cref="State"/>. Override to add custom logic.  
+        /// Called when entering this <see cref="StateBehavior"/>'s <see cref="State"/>. Override to add custom logic. 
         /// </summary>  
-        /// <param name="prev">The previous <see cref="State"/>.</param>  
-        /// <param name="isFinal">Indicates if this is the final <see cref="State"/>.</param>  
-        internal virtual void OnEnter(State prev, bool isFinal) { }
+        /// <param name="prev">The previous <see cref="State"/> being left in this transition process.</param>  
+        /// <param name="isFinal">Whether this is the end <see cref="State"/> being entered or if it has children.</param>
+        protected virtual void OnEnter(State prev, bool isFinal) { }
+        internal void DoEnter(State prev, bool isFinal)=> OnEnter(prev, isFinal);
 
         /// <summary>  
-        /// Called when exiting the <see cref="State"/>. Override to add custom logic.  
+        /// Called when exiting this <see cref="StateBehavior"/>'s <see cref="State"/>. Override to add custom logic. 
         /// </summary>  
-        /// <param name="next">The next <see cref="State"/>.</param>  
-        internal virtual void OnExit(State next) { }
+        /// <param name="next">The new <see cref="State"/> being entered in this transition process.</param>  
+        protected virtual void OnExit(State next) { }
+        internal void DoExit(State next) => OnExit(next);
 
         /// <summary>  
         /// Retrieves a <see cref="Component"/> from the associated <see cref="StateMachine"/>.  

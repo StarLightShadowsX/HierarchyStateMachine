@@ -110,7 +110,7 @@ namespace SLS.StateMachineH {
         internal void DoAwake()
         {
             for (int i = 0; i < Behaviors.Length; i++)
-                Behaviors[i].OnAwake();
+                Behaviors[i].DoAwake();
 
             for (int i = 0; i < Children.Count; i++)
                 Children[i].DoAwake();
@@ -122,7 +122,7 @@ namespace SLS.StateMachineH {
         internal void DoUpdate()
         {
             for (int i = 0; i < Behaviors.Length; i++)
-                Behaviors[i].OnUpdate();
+                Behaviors[i].DoUpdate();
 
             CurrentChild?.DoUpdate();
         }
@@ -133,7 +133,7 @@ namespace SLS.StateMachineH {
         internal void DoFixedUpdate()
         {
             for (int i = 0; i < Behaviors.Length; i++)
-                Behaviors[i].OnFixedUpdate();
+                Behaviors[i].DoFixedUpdate();
 
             if (CurrentChild) CurrentChild.DoFixedUpdate();
         }
@@ -145,11 +145,11 @@ namespace SLS.StateMachineH {
         internal void DoEnter(State prev)
         {
             for (int i = 0; i < Behaviors.Length; i++)
-                Behaviors[i].OnEnter(null, !HasChildren);
+                Behaviors[i].DoEnter(null, !HasChildren);
             Active = true;
             gameObject.SetActive(true);
             for (int i = 0; i < Behaviors.Length; i++)
-                Behaviors[i].OnEnter(prev, !HasChildren);
+                Behaviors[i].DoEnter(prev, !HasChildren);
         }
 
         /// <summary>  
@@ -159,12 +159,12 @@ namespace SLS.StateMachineH {
         internal void DoExit(State next)
         {
             for (int i = 0; i < Behaviors.Length; i++)
-                Behaviors[i].OnExit(null);
+                Behaviors[i].DoExit(null);
             Active = false;
             gameObject.SetActive(false);
             CurrentChild = null;
             for (int i = 0; i < Behaviors.Length; i++)
-                Behaviors[i].OnExit(next);
+                Behaviors[i].DoExit(next);
         }
 
         /// <summary>  

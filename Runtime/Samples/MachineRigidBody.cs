@@ -10,12 +10,12 @@ namespace SLS.StateMachineH.Samples
     [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(StateMachine))]
     public class MachineRigidBody : StateBehavior
     {
-        [SerializeField] Vector3 defaultGravity;
+        [SerializeField] Vector3 defaultGravity = new(0,1,0);
         [SerializeField] float maxSlopeNormalAngle = 45f;
         /// <summary>
         /// Whether this body should automatically check the grounded status before movement.
         /// </summary>
-        public bool checkGround;
+        public bool checkGround = true;
         /// <summary>
         /// The buffer used to check for ground.
         /// </summary>
@@ -51,7 +51,7 @@ namespace SLS.StateMachineH.Samples
         /// <summary>
         /// Custom velocity value.
         /// </summary>
-         public Vector3 velocity = new(0, 0, 0);
+        [NonSerialized] public Vector3 velocity = new(0, 0, 0);
         /// <summary>
         /// Custom angular velocity value.
         /// </summary>
@@ -79,13 +79,13 @@ namespace SLS.StateMachineH.Samples
         public JumpState JumpState { get; protected set; } = JumpState.Grounded;
         public bool Grounded => JumpState == JumpState.Grounded;
 
-        internal override void OnSetup()
+        protected override void OnSetup()
         {
             if (RB == null) RB = GetComponent<Rigidbody>();
             if (Collider == null) Collider = GetComponent<CapsuleCollider>();
         }
 
-        internal override void OnFixedUpdate()
+        protected override void OnFixedUpdate()
         {
             /*if (rigidBodyInfluence == 0)*/ RB.velocity = Vector3.zero;
             /*if (rigidBodyAngularInfluence == 0)*/ RB.angularVelocity = Vector3.zero;

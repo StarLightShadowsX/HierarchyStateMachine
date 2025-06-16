@@ -11,12 +11,12 @@ namespace SLS.StateMachineH.Samples
         public SampleAirMovement jumpingState;
 
         [SerializeField, HideInInspector] private MachineRigidBody body;
-        internal override void OnSetup()
+        protected override void OnSetup()
         {
             if (body == null) body = GetComponentFromMachine<MachineRigidBody>();
         }
 
-        internal override void OnUpdate()
+        protected override void OnUpdate()
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -24,7 +24,7 @@ namespace SLS.StateMachineH.Samples
                 jumpingState.Jump();
             }
         }
-        internal override void OnFixedUpdate()
+        protected override void OnFixedUpdate()
         {
             if (Input.GetKey(KeyCode.W))
                 body.velocity.z = moveSpeed;

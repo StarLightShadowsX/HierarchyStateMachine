@@ -118,7 +118,7 @@ namespace SLS.StateMachineH
         /// <summary>  
         /// Updates the signal manager, processing queued signals if necessary.  
         /// </summary>  
-        internal override void OnUpdate()
+        protected override void OnUpdate()
         {
             if (queueSignals && ActiveSignalLength > 0f)
             {

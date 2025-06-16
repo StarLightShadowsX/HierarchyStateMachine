@@ -67,7 +67,7 @@ namespace SLS.StateMachineH
         /// </summary>  
         /// <param name="prev">The previous state.</param>  
         /// <param name="isFinal">Indicates whether this is the final state.</param>  
-        internal override void OnEnter(State prev, bool isFinal)
+        protected override void OnEnter(State prev, bool isFinal)
         {
             if (lockOnEnter) Locked = true;
         }

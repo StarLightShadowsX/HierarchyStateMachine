@@ -42,7 +42,7 @@ namespace SLS.StateMachineH
         /// <summary>  
         /// Sets up the <see cref="StateAnimator"/> by attempting to retrieve the <see cref="Animator"/> component.  
         /// </summary>  
-        internal override void OnSetup()
+        protected override void OnSetup()
         {
             TryGetComponentFromMachine(out animator);
             if (animator == null) Destroy(this);
@@ -53,7 +53,7 @@ namespace SLS.StateMachineH
         /// </summary>  
         /// <param name="prev">The previous <see cref="State"/>.</param>  
         /// <param name="isFinal">Indicates if this is the final <see cref="State"/>.</param>  
-        internal override void OnEnter(State prev, bool isFinal)
+        protected override void OnEnter(State prev, bool isFinal)
         {
             if (!isFinal && !doWhenNotFinal) return;
             if (onEntry == EntryAnimAction.Play) Play(onEnterName);

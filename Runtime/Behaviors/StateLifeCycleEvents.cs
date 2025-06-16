@@ -43,19 +43,19 @@ namespace SLS.StateMachineH
         /// <summary>  
         /// Invoked during the setup phase of the state.  
         /// </summary>  
-        internal override void OnSetup() => onSetup?.Invoke();
+        protected override void OnSetup() => onSetup?.Invoke();
 
         /// <summary>  
         /// Invoked during the awake phase of the state.  
         /// </summary>  
-        internal override void OnAwake() => onAwake?.Invoke();
+        protected override void OnAwake() => onAwake?.Invoke();
 
         /// <summary>  
         /// Invoked when entering the state. Activates associated GameObjects.  
         /// </summary>  
         /// <param name="prev">The previous state.</param>  
         /// <param name="isFinal">Indicates whether this is the final state.</param>  
-        internal override void OnEnter(State prev, bool isFinal)
+        protected override void OnEnter(State prev, bool isFinal)
         {
             onEnter?.Invoke();
             if (activateObjects != null)
@@ -67,7 +67,7 @@ namespace SLS.StateMachineH
         /// Invoked when exiting the state. Deactivates associated GameObjects.  
         /// </summary>  
         /// <param name="next">The next state.</param>  
-        internal override void OnExit(State next)
+        protected override void OnExit(State next)
         {
             onExit?.Invoke();
             if (activateObjects != null)

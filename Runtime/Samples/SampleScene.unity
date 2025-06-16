@@ -133,7 +133,6 @@ GameObject:
   - component: {fileID: 200416012}
   - component: {fileID: 200416011}
   - component: {fileID: 200416015}
-  - component: {fileID: 200416014}
   - component: {fileID: 200416013}
   m_Layer: 0
   m_Name: GameObject
@@ -154,19 +153,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41a2a6c6c5b407d45a1aa9d16408554a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Behaviors>k__BackingField:
-  - {fileID: 200416014}
+  <Behaviors>k__BackingField: []
   <Machine>k__BackingField: {fileID: 200416011}
   <Parent>k__BackingField: {fileID: 0}
   <Layer>k__BackingField: 0
-  <Children>k__BackingField:
-  - {fileID: 650601330}
-  - {fileID: 1077044051}
-  <ChildCount>k__BackingField: 2
-  <ChildNodes>k__BackingField:
-  - {fileID: 650601330}
-  - {fileID: 1077044051}
-  <StatesSetup>k__BackingField: 1
+  <Children>k__BackingField: []
+  <ChildCount>k__BackingField: 0
+  <StatesSetup>k__BackingField: 0
   <StateHolder>k__BackingField: {fileID: 1608652084}
 --- !u!4 &200416012
 Transform:
@@ -208,28 +201,6 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &200416014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 200416010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73722a48234c0d048ae09962d98dca84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <Machine>k__BackingField: {fileID: 200416011}
-  <State>k__BackingField: {fileID: 200416011}
-  defaultGravity: {x: 0, y: 0, z: 0}
-  maxSlopeNormalAngle: 45
-  checkGround: 1
-  groundCheckBuffer: 0.1
-  movementProjectionSteps: 5
-  <RB>k__BackingField: {fileID: 200416015}
-  <Collider>k__BackingField: {fileID: 200416013}
-  velocity: {x: 0, y: 0, z: 0}
 --- !u!54 &200416015
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -560,7 +531,6 @@ GameObject:
   m_Component:
   - component: {fileID: 650601328}
   - component: {fileID: 650601330}
-  - component: {fileID: 650601329}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
@@ -583,23 +553,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1608652084}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &650601329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 650601327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2a5e013e2ea2b24eb864cd535530a31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <Machine>k__BackingField: {fileID: 200416011}
-  <State>k__BackingField: {fileID: 650601330}
-  moveSpeed: 3
-  jumpingState: {fileID: 1077044050}
-  body: {fileID: 200416014}
 --- !u!114 &650601330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,7 +566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Behaviors>k__BackingField:
-  - {fileID: 650601329}
+  - {fileID: 0}
   <Machine>k__BackingField: {fileID: 200416011}
   <Parent>k__BackingField: {fileID: 200416011}
   <Layer>k__BackingField: 0
@@ -629,7 +582,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1077044049}
   - component: {fileID: 1077044051}
-  - component: {fileID: 1077044050}
   m_Layer: 0
   m_Name: Jump
   m_TagString: Untagged
@@ -652,23 +604,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1608652084}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1077044050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1077044048}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e0599b9c515fea43877c62cf59a08f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <Machine>k__BackingField: {fileID: 200416011}
-  <State>k__BackingField: {fileID: 1077044051}
-  jumpPower: 5
-  groundedState: {fileID: 650601329}
-  body: {fileID: 200416014}
 --- !u!114 &1077044051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -682,7 +617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Behaviors>k__BackingField:
-  - {fileID: 1077044050}
+  - {fileID: 0}
   <Machine>k__BackingField: {fileID: 200416011}
   <Parent>k__BackingField: {fileID: 200416011}
   <Layer>k__BackingField: 0

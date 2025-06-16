@@ -21,7 +21,7 @@ namespace SLS.StateMachineH
         /// <summary>
         /// Called during the Awake phase to initialize collision and trigger handlers.
         /// </summary>
-        internal override void OnAwake()
+        protected override void OnAwake()
         {
             collisions2D = Machine.StateHolder.GetComponentsInChildren<IStateBehaviorPhysicsCollision2D>();
             triggers2D = Machine.StateHolder.GetComponentsInChildren<IStateBehaviorPhysicsTrigger2D>();
