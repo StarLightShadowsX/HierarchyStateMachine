@@ -10,16 +10,51 @@ using EVENT = UnityEngine.Events.UnityEvent;
 
 namespace SLS.StateMachineH
 {
+    /// <summary>  
+    /// A behavior that invokes inspector-usable events for the lifecycle phases of a state in the hierarchical <see cref="StateMachine"/>.
+    /// </summary>  
     public class StateLifeCycleEvents : StateBehavior
     {
+        /// <summary>  
+        /// Event invoked during the setup phase of the state.  
+        /// </summary>  
         public EVENT onSetup = new();
+
+        /// <summary>  
+        /// Event invoked during the awake phase of the state.  
+        /// </summary>  
         public EVENT onAwake = new();
+
+        /// <summary>  
+        /// Event invoked when entering the state.  
+        /// </summary>  
         public EVENT onEnter = new();
+
+        /// <summary>  
+        /// Event invoked when exiting the state.  
+        /// </summary>  
         public EVENT onExit = new();
+
+        /// <summary>  
+        /// Array of GameObjects to activate when entering the state and deactivate when exiting the state.  
+        /// </summary>  
         public GameObject[] activateObjects;
 
+        /// <summary>  
+        /// Invoked during the setup phase of the state.  
+        /// </summary>  
         internal override void OnSetup() => onSetup?.Invoke();
+
+        /// <summary>  
+        /// Invoked during the awake phase of the state.  
+        /// </summary>  
         internal override void OnAwake() => onAwake?.Invoke();
+
+        /// <summary>  
+        /// Invoked when entering the state. Activates associated GameObjects.  
+        /// </summary>  
+        /// <param name="prev">The previous state.</param>  
+        /// <param name="isFinal">Indicates whether this is the final state.</param>  
         internal override void OnEnter(State prev, bool isFinal)
         {
             onEnter?.Invoke();
@@ -27,6 +62,11 @@ namespace SLS.StateMachineH
                 for (int i = 0; i < activateObjects.Length; i++)
                     activateObjects[i].SetActive(true);
         }
+
+        /// <summary>  
+        /// Invoked when exiting the state. Deactivates associated GameObjects.  
+        /// </summary>  
+        /// <param name="next">The next state.</param>  
         internal override void OnExit(State next)
         {
             onExit?.Invoke();
