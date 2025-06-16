@@ -8,7 +8,7 @@ namespace SLS.StateMachineH
 {
     public class StateMachine : State, IPrebuildable
     {
-        [field: SerializeField, SerializeReference] public List<State> ChildNodes { get; internal set; }
+        [field: SerializeField, SerializeReference] public List<State> Children { get; internal set; }
         [field: SerializeField] public bool StatesSetup { get; internal set; }
         [field: SerializeField] public Transform StateHolder { get; internal set; }
 
@@ -33,7 +33,7 @@ namespace SLS.StateMachineH
             DoAwake();
 
             for (int i = 0; i < Behaviors.Length; i++) Behaviors[i].OnEnter(null, false);
-            CurrentChild = ChildNodes[0];
+            CurrentChild = Children[0];
             TransitionState(this);
 
             waitforMachineInit?.Invoke();
@@ -51,11 +51,11 @@ namespace SLS.StateMachineH
 
             {
                 ChildCount = StateHolder.childCount;
-                ChildNodes = new();
+                Children = new();
                 for (int i = 0; i < ChildCount; i++)
                 {
-                    ChildNodes.Add(StateHolder.GetChild(i).GetComponent<State>());
-                    ChildNodes[i].Setup(machine, this, layer + 1);
+                    Children.Add(StateHolder.GetChild(i).GetComponent<State>());
+                    Children[i].Setup(machine, this, layer + 1);
                 }
             }
 
