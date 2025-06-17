@@ -51,6 +51,16 @@ namespace SLS.StateMachineH
         /// </summary>
         public override int Layer => -1;
 
+        /// <summary>
+        /// The <see cref="StateMachineH.SignalManager"/> associated with this <see cref="StateMachine" (OPTIONAL.)/>.
+        /// </summary>
+        public SignalManager SignalManager { get; private set; }
+
+
+
+
+
+
         /// <summary>  
         /// Updates the state machine. Invokes <see cref="DoUpdate"/>.  
         /// </summary>  
@@ -113,6 +123,7 @@ namespace SLS.StateMachineH
 
             Behaviors = GetComponents<StateBehavior>();
             for (int i = 0; i < Behaviors.Length; i++) Behaviors[i].Setup(this);
+            SignalManager = GetComponent<SignalManager>();
 
             StatesSetup = true;
 
@@ -238,5 +249,12 @@ namespace SLS.StateMachineH
             EditorUtility.SetDirty(this);
 #endif
         }
+
+        /// <summary>
+        /// Sends a <see cref="Signal"/> through the <see cref="StateMachineH.SignalManager"/> if it exists.
+        /// </summary>
+        /// <param name="signal">The input signal. Accepts just a string.</param>
+        /// <returns></returns>
+        public bool SendSignal(Signal signal) => SignalManager != null && SignalManager.FireSignal(signal);
     }
 }

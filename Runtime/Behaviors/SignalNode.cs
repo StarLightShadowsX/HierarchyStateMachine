@@ -71,5 +71,11 @@ namespace SLS.StateMachineH
         {
             if (lockOnEnter) Locked = true;
         }
+        /// <summary>
+        /// Called when exiting a state. Unlocks the node to ensure no stale lockage.
+        /// </summary>
+        /// <param name="next"></param>
+        protected override void OnExit(State next) => Locked = false;
+
     }
 }

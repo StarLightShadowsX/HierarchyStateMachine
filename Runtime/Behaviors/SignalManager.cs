@@ -52,7 +52,7 @@ namespace SLS.StateMachineH
         /// </summary>  
         /// <param name="signal">The signal to fire.</param>  
         /// <returns>True if the signal was successfully fired; otherwise, false.</returns>  
-        public bool FireSignal(Signal signal)
+        public bool FireSignal(Signal signal, bool fromQueue = false)
         {
             bool signalFired = false;
             if (TryCurrentNode(out SignalNode signalNode) && signalNode.FireSignal(signal.name)) signalFired = true;
@@ -62,20 +62,8 @@ namespace SLS.StateMachineH
                 signalFired = true;
             }
 
-            if (signalFired)
-            {
-                if (queueSignals && SignalQueue.Count > 0)
-                    FireSignal(SignalQueue.Dequeue());
-            }
-            else if (queueSignals && signal.queueTime > 0)
-            {
-                if (signal.allowDuplicates || SignalQueue.Count == 0 || SignalQueue.Peek().name != signal.name)
-                {
-                    SignalQueue.Enqueue(signal);
-                    ActiveSignalLength = signal.queueTime;
-                    SignalQueueTimer = ActiveSignalLength;
-                }
-            }
+            if (fromQueue) QueueNext();
+            else if (!signalFired && queueSignals && signal.queueTime > 0f) QueueSignal(signal);
 
             return signalFired;
         }
@@ -115,6 +103,20 @@ namespace SLS.StateMachineH
         /// </summary>  
         public float SignalQueueTimer { get; private set; } = 0f;
 
+        private void QueueSignal(Signal signal)
+        {
+            if(!queueSignals || signal.queueTime <= 0f || (!signal.allowDuplicates && SignalQueue.Peek() == signal)) return;
+
+            SignalQueue.Enqueue(signal);
+            if (SignalQueue.Count == 1) QueueNext();
+        }
+        private void QueueNext()
+        {
+            if (SignalQueue.Count == 0) return;
+            ActiveSignalLength = SignalQueue.Peek().queueTime;
+            SignalQueueTimer = ActiveSignalLength;
+        }
+
         /// <summary>  
         /// Updates the signal manager, processing queued signals if necessary.  
         /// </summary>  
@@ -123,7 +125,7 @@ namespace SLS.StateMachineH
             if (queueSignals && ActiveSignalLength > 0f)
             {
                 SignalQueueTimer -= Time.deltaTime;
-                if (SignalQueueTimer <= 0f) FireSignal(SignalQueue.Dequeue());
+                if (SignalQueueTimer <= 0f) FireSignal(SignalQueue.Dequeue(), true);
             }
         }
     }
