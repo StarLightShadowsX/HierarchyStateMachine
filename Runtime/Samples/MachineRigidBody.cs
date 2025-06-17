@@ -93,7 +93,9 @@ namespace SLS.StateMachineH.Samples
             initVelocity = velocity * Time.fixedDeltaTime;
             initNormal = anchorPoint.normal;
 
-            if (checkGround)
+            Move(initVelocity, initNormal);
+
+            if (checkGround && velocity.y <= 0)
             {
                 if (GroundCheck(out anchorPoint))
                 {
@@ -109,9 +111,7 @@ namespace SLS.StateMachineH.Samples
                 else if (JumpState == JumpState.Grounded) UnLand();
             }
 
-            Move(initVelocity, initNormal);
-
-            if(!Grounded) ApplyGravity();
+            if (!Grounded) ApplyGravity();
         }
 
         Vector3 initVelocity;

@@ -19,11 +19,10 @@ namespace SLS.StateMachineH.Samples
 
         public void Jump()
         {
-            body.velocity.y = jumpPower;
-            body.Position += Vector3.up * body.groundCheckBuffer;
-            body.UnLand(JumpState.Jumping);
-            State.Enter();
-            body.LandEvent += Land;
+            State.Enter(); // Enter the jumping state
+            body.velocity.y = jumpPower; // Set the vertical velocity of the player to jumpPower.
+            body.UnLand(JumpState.Jumping); //Tell the MachineRigidBody is is no longer grounded and set its "JumpState".
+            body.LandEvent += Land; // Temporarily subscribe to the Land event so that Landing logic can be handled here.
         }
 
         public void Land()
