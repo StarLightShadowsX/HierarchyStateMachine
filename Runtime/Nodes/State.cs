@@ -22,7 +22,7 @@ namespace SLS.StateMachineH {
         /// <summary>  
         /// The <see cref="StateMachine"/> that owns this <see cref="State"/>.  
         /// </summary>  
-        [field: SerializeField] public StateMachine Machine { get; internal set; }
+        [field: SerializeField] public virtual StateMachine Machine { get; internal set; }
 
         /// <summary>  
         /// The parent <see cref="State"/> of this <see cref="State"/>. (Will be the <see cref="StateMachine"/> if highest layer.)  

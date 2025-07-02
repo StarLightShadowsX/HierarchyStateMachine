@@ -56,7 +56,10 @@ namespace SLS.StateMachineH
         /// </summary>
         public SignalManager SignalManager { get; private set; }
 
-
+        /// <summary>
+        /// This <see cref="StateMachine"/>.
+        /// </summary>
+        public override StateMachine Machine => this;
 
 
 
