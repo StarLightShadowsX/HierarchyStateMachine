@@ -105,7 +105,7 @@ namespace SLS.StateMachineH
 
         private void QueueSignal(Signal signal)
         {
-            if(!queueSignals || signal.queueTime <= 0f || (!signal.allowDuplicates && SignalQueue.Peek() == signal)) return;
+            if (!queueSignals || signal.queueTime <= 0f || (!signal.allowDuplicates && SignalQueue.Peek() == signal)) return;
 
             SignalQueue.Enqueue(signal);
             if (SignalQueue.Count == 1) QueueNext();
@@ -128,5 +128,7 @@ namespace SLS.StateMachineH
                 if (SignalQueueTimer <= 0f) FireSignal(SignalQueue.Dequeue(), true);
             }
         }
+
+        public bool Locked => TryCurrentNode(out SignalNode signalNode) && signalNode.Locked;
     }
 }
