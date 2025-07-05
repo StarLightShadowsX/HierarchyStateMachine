@@ -195,6 +195,10 @@ namespace SLS.StateMachineH {
 #endif
             return newNode;
         }
+
+
+        public State this[int i] => Children[i];
+
     }
 
     public enum StateType
