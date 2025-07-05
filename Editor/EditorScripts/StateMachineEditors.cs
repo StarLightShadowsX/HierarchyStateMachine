@@ -115,8 +115,15 @@ namespace SLS.StateMachineH
             }
         }
 
-        public static void DrawStateNode(ref Rect position, State target, SerializedObject serializedObject, bool showMachineIcon = true, bool showWarningIcon = true)
+        public static void DrawStateNode(ref Rect position, State target, SerializedObject serializedObject, bool showMachineIcon = true)
         {
+            if((target as State).Machine == null)
+            {
+                EditorGUI.LabelField(position, "This State is not connected to a StateMachine.");
+                return;
+            }
+
+
             float iconSize = EditorGUIUtility.singleLineHeight;
             float spacing = 4f;
 
@@ -141,6 +148,8 @@ namespace SLS.StateMachineH
                 }
             }
 
+
+            bool showWarningIcon = !((State)target).Machine.StatesSetup;
             // Warning Icon  
             Rect warningRect = new(machineRect.xMax + spacing, position.y, iconSize, iconSize);
             if (showWarningIcon && target is State stateChild && stateChild.Machine != null && !stateChild.Machine.StatesSetup)
@@ -228,7 +237,7 @@ namespace SLS.StateMachineH
             }
             position.y += position.yMax + 12;
         }
-    }
+    } 
     [CustomEditor(typeof(State), true)]
     public class StateChildEditor : Editor
     {
@@ -237,7 +246,7 @@ namespace SLS.StateMachineH
             Rect position = EditorGUILayout.GetControlRect();
             float startY = position.y;
 
-            EditorUtilities.DrawStateNode(ref position, (State)target, serializedObject, true, !((State)target).Machine.StatesSetup);
+            EditorUtilities.DrawStateNode(ref position, (State)target, serializedObject, true);
 
             if (Application.isPlaying) EditorUtilities.DrawActiveStateMachineDetails(ref position, (State)target);
 
@@ -255,7 +264,7 @@ namespace SLS.StateMachineH
             Rect position = EditorGUILayout.GetControlRect();
             float startY = position.y;
 
-            EditorUtilities.DrawStateNode(ref position, (State)target, serializedObject, true, !((State)target).Machine.StatesSetup);
+            EditorUtilities.DrawStateNode(ref position, (State)target, serializedObject, false);
 
             if (Application.isPlaying)
                 EditorUtilities.DrawActiveStateMachineDetails(ref position, (State)target);
@@ -282,8 +291,23 @@ namespace SLS.StateMachineH
                 position.y = position.yMax;
             }
 
-            
-            GUILayout.Space(position.yMax - startY);
+            GUILayout.Space(position.yMax - startY + 5);
+
+            if(target.GetType() != typeof(StateMachine))
+            {
+                // Display additional fields unique to derived classes  
+                SerializedProperty property = serializedObject.GetIterator();
+                for (int i = 0; i < 9; i++) property.NextVisible(i==0);
+
+                while (property.NextVisible(false))
+                {
+                    if (property.name != nameof(StateMachine.StatesSetup) && property.name != nameof(StateMachine.StateHolder)) 
+                        EditorGUILayout.PropertyField(property, true);
+                }
+            }
+
+            serializedObject.ApplyModifiedProperties();
+
         }
     }
 }
