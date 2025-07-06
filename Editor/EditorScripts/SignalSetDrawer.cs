@@ -17,8 +17,8 @@ namespace SLS.StateMachineH.SerializedDictionary
             float valueHeight = EditorGUI.GetPropertyHeight(valueProperty, true);
             float totalHeight = keyHeight + valueHeight + EditorGUIUtility.standardVerticalSpacing;
 
-            Rect keyRect = new Rect(position.x + 10, position.y, position.width-30, keyHeight);
-            Rect valueRect = new Rect(position.x - 15, position.y + keyHeight + EditorGUIUtility.standardVerticalSpacing, position.width+17, valueHeight);
+            Rect keyRect = new Rect(position.x + 10, position.y, position.width - 30, keyHeight);
+            Rect valueRect = new Rect(position.x - 15, position.y + keyHeight + EditorGUIUtility.standardVerticalSpacing, position.width + 17, valueHeight);
 
             var prevColor = GUI.color;
             if (isDupe) GUI.color = new Color(1.5f, 1, 1);

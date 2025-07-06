@@ -58,11 +58,11 @@ namespace SLS.StateMachineH.SerializedDictionary
                 }
 
                 if (position != default) startingPosition = position;
-                if(property != null) this.property = property;
-                if(this.property != null) serializedListProperty = this.property.FindPropertyRelative("serializedList");
-                if(label != null) this.label = label;
-                if(fieldInfo != null) this.fieldInfo = fieldInfo;
-                if(updateList) UpdateReorderableList();
+                if (property != null) this.property = property;
+                if (this.property != null) serializedListProperty = this.property.FindPropertyRelative("serializedList");
+                if (label != null) this.label = label;
+                if (fieldInfo != null) this.fieldInfo = fieldInfo;
+                if (updateList) UpdateReorderableList();
             }
 
 
@@ -79,17 +79,44 @@ namespace SLS.StateMachineH.SerializedDictionary
 
             public float GetPropertyHeight()
             {
-                if (reorderableList == null || reorderableList.draggable == false) UpdateReorderableList();
-                if (reorderableList == null || reorderableList.list == null) return EditorGUIUtility.singleLineHeight * 3.5f;
-                return reorderableList.GetHeight();
-            } 
+                if (reorderableList == null || reorderableList.list == null || reorderableList.draggable == false) UpdateReorderableList();
+                try
+                {
+                    return reorderableList.GetHeight();
+                }
+                catch (System.ArgumentNullException)
+                {
+                    try
+                    {
+                        Update();
+                        return reorderableList.GetHeight();
+                    }
+                    catch (System.ArgumentNullException)
+                    {
+                        Debug.LogWarning("SerializedDictionaryDrawer: Could not get height for reorderable list. Returning default height.");
+                        return EditorGUIUtility.singleLineHeight * 3.5f;
+                    }
+                }
+
+            }
             public void OnGUI()
             {
                 EditorGUI.BeginProperty(startingPosition, label, property);
 
                 if (reorderableList == null || reorderableList.draggable == false) UpdateReorderableList();
-                reorderableList.DoList(startingPosition);
-                EditorGUI.EndProperty();
+                try
+                {
+                    reorderableList.DoList(startingPosition);
+                }
+                catch (System.ArgumentNullException X)
+                {
+                    Update();
+                    reorderableList.DoList(startingPosition);
+                }
+                finally
+                {
+                    EditorGUI.EndProperty();
+                }
             }
             public void UpdateReorderableList()
             {
@@ -204,14 +231,14 @@ namespace SLS.StateMachineH.SerializedDictionary
             var prevColor = GUI.color;
             if (isDupe) GUI.color = new Color(1.5f, 1, 1);
 
-            try 
+            try
             {
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.PropertyField(keyRect, keyProperty, GUIContent.none);
             }
             finally { GUI.color = prevColor; }
             EditorGUI.PropertyField(valueRect, valueProperty, GUIContent.none);
-            
+
             if (EditorGUI.EndChangeCheck())
             {
                 drawerInstance.property.serializedObject.ApplyModifiedProperties();
@@ -225,7 +252,7 @@ namespace SLS.StateMachineH.SerializedDictionary
             SerializedProperty keyProperty = element.FindPropertyRelative("Key");
             SerializedProperty valueProperty = element.FindPropertyRelative("Value");
             return Mathf.Max(
-                EditorGUI.GetPropertyHeight(keyProperty, true), 
+                EditorGUI.GetPropertyHeight(keyProperty, true),
                 EditorGUI.GetPropertyHeight(valueProperty, true),
                 EditorGUIUtility.singleLineHeight
                 );

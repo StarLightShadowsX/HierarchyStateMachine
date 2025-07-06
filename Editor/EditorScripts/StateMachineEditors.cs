@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace SLS.StateMachineH
 {
-    public static class EditorUtilities
+    public static class StateMachine_EditorUtilities
     {
         public static void DrawScriptClicker<T>(Object target, Rect position) where T : MonoBehaviour
         {
@@ -15,95 +15,20 @@ namespace SLS.StateMachineH
             EditorGUI.ObjectField(position, "Script", MonoScript.FromMonoBehaviour((T)target), typeof(T), false);
             GUI.enabled = true;
         }
-        /*
-        public static void DrawStateNodeHeader(Rect position, State target, SerializedObject serializedObject)
+
+        public static string PluginsPath = "Assets/Plugins/HierarchyStateMachine/";
+        public static string PackagesPath = "Packages/com.starlightshadows.hierarchystatemachine/";
+        public static string IconsPath = "Editor/Icons/";
+
+        public static Texture GetTexture(string name)
         {
-            
-            Rect scriptRect = new(position.x, position.y, EditorGUIUtility.singleLineHeight, EditorGUIUtility.singleLineHeight);
-            Rect machineRect = new(position.x + EditorGUIUtility.singleLineHeight, position.y, EditorGUIUtility.singleLineHeight, EditorGUIUtility.singleLineHeight);
-            Rect warningRect = new(position.x + (EditorGUIUtility.singleLineHeight * 2), position.y, EditorGUIUtility.singleLineHeight, EditorGUIUtility.singleLineHeight);
-            Rect behaviorsRect = new(position.x + (EditorGUIUtility.singleLineHeight * 3f), position.y, position.xMax - warningRect.xMax, EditorGUIUtility.singleLineHeight);
+            Texture result;
 
-            var stateChild = target as State;
-            StateMachine machine = target is StateMachine 
-                ? target as StateMachine 
-                : (target as State).Machine;
+            result = AssetDatabase.LoadAssetAtPath<Texture>($"{PackagesPath}{IconsPath}{name}.png");
+            if(result == null) result = AssetDatabase.LoadAssetAtPath<Texture>($"{PluginsPath}{IconsPath}{name}.png");
 
-
-            // Draw MonoBehavior icon in scriptRect  
-            Texture monoIcon = EditorGUIUtility.IconContent("cs Script Icon").image;
-            GUI.DrawTexture(scriptRect, monoIcon, ScaleMode.ScaleToFit);
-
-            EditorGUIUtility.AddCursorRect(scriptRect, MouseCursor.Link);
-            if (Event.current.type == EventType.MouseDown && (scriptRect.Contains(Event.current.mousePosition)))
-                EditorGUIUtility.PingObject(MonoScript.FromMonoBehaviour((MonoBehaviour)target));
-
-
-            // Draw State Machine icon in machineRect  
-            Texture machineIcon = EditorGUIUtility.GetIconForObject(machine);
-            GUI.DrawTexture(machineRect, machineIcon, ScaleMode.ScaleToFit);
-
-            machineRect.LinkToObject(machine);
-
-            // Draw a red box in the spacerRect if Machine's StatesSetup is false  
-            if (stateChild != null && stateChild.Machine != null && !stateChild.Machine.StatesSetup)
-            {
-                GUIContent warning = new();
-                warning.text = "!!!";
-                warning.tooltip = "This State Machine's Tree either has not been set up or has been labeled Dirty!";
-                GUI.color = Color.red;
-                GUI.Label(warningRect, warning);
-                GUI.color = Color.white;
-
-                warningRect.LinkToObject(machine);
-            }
-
-
-
-            // Draw (X behaviors) label showing the number of behaviors attached to the node  
-            int behaviorCount = target.Behaviors?.Length ?? 0;
-            GUI.Label(behaviorsRect, $"({behaviorCount} Behaviors)");
+            return result;
         }
-
-        public static void DrawStateGroupEditor(Rect position, State target, SerializedObject serializedObject)
-        {
-            if (!target.HasChildren) return;
-
-            GUIContent childrenLabel = new($"({target.ChildCount} Children)");
-            Rect childrenRect = new(position.x, position.y, GUI.skin.label.CalcSize(childrenLabel).x, position.height);
-
-            Rect addStateButtonRect = new(position.xMax - (position.height * 2), position.y, position.height, position.height);
-            Rect addGroupButtonRect = new(position.xMax - position.height, position.y, position.height, position.height);
-
-            // Draw "(X Children)" label  
-            GUI.Label(childrenRect, childrenLabel);
-
-            // Draw current child label if game is playing  
-            if (Application.isPlaying && target.CurrentChild != null)
-            {
-                Rect currentChildRect = new(childrenRect.xMax, position.y, addStateButtonRect.xMin - childrenRect.xMax, position.height);
-                currentChildRect.LinkToObject(target.CurrentChild as Object);
-                GUIContent current = new();
-                current.image = EditorGUIUtility.GetIconForObject(target.CurrentChild as Object);
-                current.text = (target.CurrentChild as MonoBehaviour).gameObject.name;
-                current.tooltip = "The currently active child node of this Machine/Group.";
-                GUI.Label(currentChildRect, current, EditorStyles.linkLabel);
-            }
-
-            GUIContent addStateButtonIcon = new("", EditorGUIUtility.IconContent(stateIconPath).image, "Add a new State under this Machine/Group");
-            GUIContent addGroupButtonIcon = new("", EditorGUIUtility.IconContent(stateGroupIconPath).image, "Add a new Group under this Machine/Group");
-
-            if (GUI.Button(addStateButtonRect, addStateButtonIcon)) target.AddChildNode();
-
-            // Draw "ADD" label above the buttons
-            Vector2 addTextSize = GUI.skin.label.CalcSize(new("ADD"));
-            Rect addLabelRect = new(position.xMax - position.height - (addTextSize.x/2), addStateButtonRect.yMin - addTextSize.y-5, position.height * 2, position.height);
-            GUI.Label(addLabelRect, "ADD", EditorStyles.boldLabel);
-        }
-        */
-        public static string stateIconPath = "Assets/Plugins/HierarchyStateMachine/Editor/Icons/State.png";
-        public static string stateGroupIconPath = "Assets/Plugins/HierarchyStateMachine/Editor/Icons/StateGroup.png";
-        public static string stateMachineIconPath = "Assets/Plugins/HierarchyStateMachine/Editor/Icons/StateMachine.png";
 
         public static void LinkToObject(this Rect rect, Object target)
         {
@@ -117,7 +42,7 @@ namespace SLS.StateMachineH
 
         public static void DrawStateNode(ref Rect position, State target, SerializedObject serializedObject, bool showMachineIcon = true)
         {
-            if((target as State).Machine == null)
+            if ((target as State).Machine == null)
             {
                 EditorGUI.LabelField(position, "This State is not connected to a StateMachine.");
                 return;
@@ -143,6 +68,8 @@ namespace SLS.StateMachineH
                 if (machine != null)
                 {
                     Texture machineIcon = EditorGUIUtility.GetIconForObject(machine);
+                    if (machineIcon == null) machineIcon = GetTexture("StateMachine");
+
                     GUI.DrawTexture(machineRect, machineIcon, ScaleMode.ScaleToFit);
                     machineRect.LinkToObject(machine);
                 }
@@ -232,12 +159,12 @@ namespace SLS.StateMachineH
                     childRect.LinkToObject(Machine.CurrentState);
                     GUI.Label(childRect, finalContent, EditorStyles.linkLabel);
                 }
-                    
-                
+
+
             }
             position.y += position.yMax + 12;
         }
-    } 
+    }
     [CustomEditor(typeof(State), false)]
     public class StateChildEditor : Editor
     {
@@ -246,11 +173,11 @@ namespace SLS.StateMachineH
             Rect position = EditorGUILayout.GetControlRect();
             float startY = position.y;
 
-            EditorUtilities.DrawStateNode(ref position, (State)target, serializedObject, true);
+            StateMachine_EditorUtilities.DrawStateNode(ref position, (State)target, serializedObject, true);
 
-            if (Application.isPlaying) EditorUtilities.DrawActiveStateMachineDetails(ref position, (State)target);
+            if (Application.isPlaying) StateMachine_EditorUtilities.DrawActiveStateMachineDetails(ref position, (State)target);
 
-            GUILayout.Space(position.yMax - startY); 
+            GUILayout.Space(position.yMax - startY);
         }
     }
 
@@ -264,10 +191,10 @@ namespace SLS.StateMachineH
             Rect position = EditorGUILayout.GetControlRect();
             float startY = position.y;
 
-            EditorUtilities.DrawStateNode(ref position, (State)target, serializedObject, false);
+            StateMachine_EditorUtilities.DrawStateNode(ref position, (State)target, serializedObject, false);
 
             if (Application.isPlaying)
-                EditorUtilities.DrawActiveStateMachineDetails(ref position, (State)target);
+                StateMachine_EditorUtilities.DrawActiveStateMachineDetails(ref position, (State)target);
             else
             {
                 position.height += 15;
@@ -293,7 +220,7 @@ namespace SLS.StateMachineH
 
             GUILayout.Space(position.yMax - startY + 5);
 
-            if(target.GetType() != typeof(StateMachine))
+            if (target.GetType() != typeof(StateMachine))
             {
                 // Display additional fields unique to derived classes  
                 SerializedProperty property = serializedObject.GetIterator();
@@ -301,7 +228,7 @@ namespace SLS.StateMachineH
 
                 // Skip the first 9 properties (Script, Name, Layer, Active, CurrentChild, Type, HasChildren, Behaviors, ChildCount)
                 for (int i = 0; i < 8; i++)
-                    if (!property.NextVisible(false)) 
+                    if (!property.NextVisible(false))
                         break;
 
                 while (property.NextVisible(false))

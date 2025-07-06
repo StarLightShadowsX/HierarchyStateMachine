@@ -19,7 +19,7 @@ namespace SLS.StateMachineH
             Rect totalArea = EditorGUILayout.GetControlRect();
             GUIStyle skin = GUI.skin.label;
 
-            EditorUtilities.DrawScriptClicker<SignalManager>(signalManager, totalArea);
+            StateMachine_EditorUtilities.DrawScriptClicker<SignalManager>(signalManager, totalArea);
 
             Rect globalSignalsArea = totalArea;
             globalSignalsArea.y += EditorGUIUtility.singleLineHeight + 4;
