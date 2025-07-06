@@ -36,6 +36,22 @@ namespace SLS.StateMachineH
         public EVENT onExit = new();
 
         /// <summary>  
+        /// Event invoked when entering or exiting the state.  
+        /// </summary>  
+
+
+#if ULT_EVENTS
+        public UltEvents.UltEvent<bool> onStateChange = new();
+#else
+        public UnityEngine.Events.UnityEvent<bool> onStateChange = new();
+#endif
+
+
+
+
+
+
+        /// <summary>  
         /// Array of GameObjects to activate when entering the state and deactivate when exiting the state.  
         /// </summary>  
         public GameObject[] activateObjects;
@@ -58,6 +74,7 @@ namespace SLS.StateMachineH
         protected override void OnEnter(State prev, bool isFinal)
         {
             onEnter?.Invoke();
+            onStateChange?.Invoke(true);
             if (activateObjects != null)
                 for (int i = 0; i < activateObjects.Length; i++)
                     activateObjects[i].SetActive(true);
@@ -70,6 +87,7 @@ namespace SLS.StateMachineH
         protected override void OnExit(State next)
         {
             onExit?.Invoke();
+            onStateChange?.Invoke(false);
             if (activateObjects != null)
                 for (int i = 0; i < activateObjects.Length; i++)
                     activateObjects[i].SetActive(false);
