@@ -238,7 +238,7 @@ namespace SLS.StateMachineH
             position.y += position.yMax + 12;
         }
     } 
-    [CustomEditor(typeof(State), true)]
+    [CustomEditor(typeof(State), false)]
     public class StateChildEditor : Editor
     {
         public override void OnInspectorGUI()
@@ -297,12 +297,22 @@ namespace SLS.StateMachineH
             {
                 // Display additional fields unique to derived classes  
                 SerializedProperty property = serializedObject.GetIterator();
-                for (int i = 0; i < 9; i++) property.NextVisible(i==0);
+                property.NextVisible(true);
+
+                // Skip the first 9 properties (Script, Name, Layer, Active, CurrentChild, Type, HasChildren, Behaviors, ChildCount)
+                for (int i = 0; i < 8; i++)
+                    if (!property.NextVisible(false)) 
+                        break;
 
                 while (property.NextVisible(false))
                 {
-                    if (property.name != nameof(StateMachine.StatesSetup) && property.name != nameof(StateMachine.StateHolder)) 
-                        EditorGUILayout.PropertyField(property, true);
+                    EditorGUI.BeginChangeCheck();
+                    EditorGUILayout.PropertyField(property, true);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        serializedObject.ApplyModifiedProperties();
+                        EditorUtility.SetDirty(target);
+                    }
                 }
             }
 

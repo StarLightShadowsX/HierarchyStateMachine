@@ -80,7 +80,7 @@ namespace SLS.StateMachineH.SerializedDictionary
             public float GetPropertyHeight()
             {
                 if (reorderableList == null || reorderableList.draggable == false) UpdateReorderableList();
-                if (reorderableList == null) return EditorGUIUtility.singleLineHeight;
+                if (reorderableList == null || reorderableList.list == null) return EditorGUIUtility.singleLineHeight * 3.5f;
                 return reorderableList.GetHeight();
             } 
             public void OnGUI()
