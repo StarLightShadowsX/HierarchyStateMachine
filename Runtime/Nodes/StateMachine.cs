@@ -54,7 +54,17 @@ namespace SLS.StateMachineH
         /// <summary>
         /// The <see cref="StateMachineH.SignalManager"/> associated with this <see cref="StateMachine" (OPTIONAL.)/>.
         /// </summary>
-        public SignalManager SignalManager { get; private set; }
+        public SignalManager SignalManager
+        {
+            get
+            {
+                if (_singalManager != null) return _singalManager;
+                if (TryGetComponent(out _singalManager)) return _singalManager;
+                return null;
+            }
+            private set => _singalManager = value;
+        }
+        [SerializeField, HideInInspector] private SignalManager _singalManager;
 
         /// <summary>
         /// This <see cref="StateMachine"/>.

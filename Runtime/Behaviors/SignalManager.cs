@@ -105,7 +105,7 @@ namespace SLS.StateMachineH
 
         private void QueueSignal(Signal signal)
         {
-            if (!queueSignals || signal.queueTime <= 0f || (!signal.allowDuplicates && SignalQueue.Peek() == signal)) return;
+            if (!queueSignals || signal.queueTime <= 0f || (!signal.allowDuplicates && SignalQueue.Count > 0 && SignalQueue.Peek() == signal)) return;
 
             SignalQueue.Enqueue(signal);
             if (SignalQueue.Count == 1) QueueNext();
@@ -125,7 +125,11 @@ namespace SLS.StateMachineH
             if (queueSignals && ActiveSignalLength > 0f)
             {
                 SignalQueueTimer -= Time.deltaTime;
-                if (SignalQueueTimer <= 0f) FireSignal(SignalQueue.Dequeue(), true);
+                if (SignalQueueTimer <= 0f)
+                {
+                    ActiveSignalLength = 0;
+                    FireSignal(SignalQueue.Dequeue(), true);
+                }
             }
         }
 
