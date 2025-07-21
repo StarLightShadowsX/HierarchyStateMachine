@@ -68,6 +68,8 @@ namespace SLS.StateMachineH
             return signalFired;
         }
 
+        public bool FireSignalBasic(string signalName) => FireSignal(new Signal(signalName));
+
         /// <summary>  
         /// Locks the current signal node, preventing signals from being fired.  
         /// </summary>  
@@ -122,7 +124,7 @@ namespace SLS.StateMachineH
         /// </summary>  
         protected override void OnUpdate()
         {
-            if (queueSignals && ActiveSignalLength > 0f)
+            if (queueSignals && SignalQueue.Count > 0 && ActiveSignalLength > 0f)
             {
                 SignalQueueTimer -= Time.deltaTime;
                 if (SignalQueueTimer <= 0f)

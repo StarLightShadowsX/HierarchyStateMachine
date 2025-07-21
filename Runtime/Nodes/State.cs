@@ -52,7 +52,17 @@ namespace SLS.StateMachineH {
         /// <summary>  
         /// The currently active child <see cref="State"/>, if any exists.  
         /// </summary>  
-        public State CurrentChild { get; internal set; }
+        public State CurrentChild
+        {
+            get => _currentChild;
+            internal set
+            {
+                if (value != null && !Children.Contains(value)) throw new System.Exception("GENUINELY HOW?????");
+                _currentChild = value;
+            }
+        }
+
+        private State _currentChild;
 
         /// <summary>  
         /// The type of this <see cref="State"/>, either Group or End.  
@@ -198,6 +208,11 @@ namespace SLS.StateMachineH {
 
 
         public State this[int i] => Children[i];
+
+        /// <summary>
+        /// Implicit bool operator. Returns true if the State exists and is Active.
+        /// </summary>
+        public static implicit operator bool(State state) => state != null && state.Active;
 
     }
 
